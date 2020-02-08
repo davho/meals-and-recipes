@@ -20,7 +20,7 @@ const store = createStore(rootReducer) //Now call your store, which takes one ar
 //Finally, the store needs to be provided to the application and for that we use Provider from react-redux
 
 const fetchFonts = () => {
-    Font.loadAsync({
+    return Font.loadAsync({
         'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
         'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf')
     })
@@ -30,15 +30,9 @@ const App = () => {
 
     const [fontLoaded, setFontLoaded] = useState(false)
 
-    const setFontLoadedToTrue = () => {
-        setTimeout(() => {
-            setFontLoaded(true)
-        }, 1000)
-    }
-
-    if (!fontLoaded) { //Technically you should be able to make onFinish={() => setFontLoaded(true)} but there's some bug in Expi where AppLoading moves too quickly from startAsync to onFinish so that the fonts actually haven't loaded by the time setFontLoaded is set to true. My hacky solution was to simply call a function that nests setFontLoaded(true) from a setTimeout set to 1000ms. I wanted to share this solution on Expo forums where numerous developers were complaining about it but all the threads had closed, even though they were relatively recent.
+    if (!fontLoaded) {
         return <AppLoading startAsync={() => fetchFonts()} onFinish={() => {
-            setFontLoadedToTrue()
+            setFontLoaded(true)
         }}/>
     }
 
